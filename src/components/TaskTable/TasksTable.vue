@@ -1,7 +1,9 @@
 <template>
   <div class="table-container">
+    <task-table-modal-delete v-if="showModal" @close="showModal = false" @delete="deleteTask()">
+    </task-table-modal-delete>
     <table class="tasks-table">
-      <thead>
+      <thead class="table-head">
       <tr class="table-row">
         <th class="table-header"
             v-for="(header, index) in tableHeaders"
@@ -25,16 +27,16 @@
           <button class="button">
             INFO
           </button>
-          <button class="button" @click="deleteTask(index)">
+          <button class="button" @click="setDialog(index)">
             DELETE
           </button>
         </tr>
-        <tr class="table-row">
+        <tr class="table-row total-time-row">
           <th class="table-header total-time-header">
             Total
           </th>
-          <td class="table-cell total-time">
-          {{timeSpent}}
+          <td class="table-cell total-time-cell">
+            {{timeSpent}}
           </td>
         </tr>
       </template>
@@ -52,46 +54,59 @@
 
 <script>
 
-	import { EventBus } from '../main';
+	import { EventBus } from '../../main';
 	import moment from 'moment';
+	import ModalDelete from '../Modals/DeleteModal/DeleteModal';
 
 	const TABLE_HEADERS = [
 		'№', 'Tasks', 'Time Start', 'Time End', 'Time Spend', 'Info', 'Delete',
-  ];
+	];
 
 	export default {
+		components: {
+			taskTableModalDelete: ModalDelete,
+		},
 		data() {
 			return {
 				tableHeaders: TABLE_HEADERS,
 				tableContent: {
 					rowContent: [],
 				},
-        timeSpentArray: [],
-        timeSpent: '',
-        milliseconds: 0
+				timeSpentArray: [],
+				timeSpent: '',
+				milliseconds: 0,
+				showModal: false,
+				indexOfDeletedItem: null,
 			};
 		},
 		methods: {
-			deleteTask(key) {
+			deleteTask() {
+				EventBus.$emit('deleteTaskWasClicked');
 				this.tableContent.rowContent = this.tableContent.rowContent
-					.filter((element, index) => index !== key);
-        this.timeSpentArray = this.timeSpentArray
-          .filter((element, index) => index !== key);
-        this.updateTime(this.timeSpentArray, this.millisecond);
+					.filter((element, index) => index !== this.indexOfDeletedItem);
+				this.timeSpentArray = this.timeSpentArray
+					.filter((element, index) => index !== this.indexOfDeletedItem);
+				this.updateTime(this.timeSpentArray, this.millisecond);
+				this.indexOfDeletedItem = null;
+				this.showModal = false;
 			},
 			calculateMs(array) {
-				return  array.reduce((acc, curr) => {
+				return array.reduce((acc, curr) => {
 					return acc + curr;
-        }, 0);
-      },
+				}, 0);
+			},
 			convertTime(milliseconds) {
 				this.timeSpent = moment('000000', 'HH:mm:ss')
 					.milliseconds(milliseconds).format('HH:mm:ss');
 			},
-      updateTime(array, milliseconds) {
+			updateTime(array, milliseconds) {
 				milliseconds = this.calculateMs(array);
 				this.convertTime(milliseconds);
-      },
+			},
+			setDialog(idx) {
+				this.showModal = true;
+				this.indexOfDeletedItem = idx;
+			},
 		},
 		mounted() {
 			EventBus.$on('stopWasClicked', (taskInfo) => {
@@ -100,6 +115,9 @@
 				this.timeSpentArray.push(timeSpent);
 				this.milliseconds = this.calculateMs(this.timeSpentArray);
 				this.convertTime(this.milliseconds);
+			});
+			EventBus.$on('deleteAgreementWasClicked', () => {
+
 			});
 		},
 	};
@@ -125,23 +143,37 @@
     align-items: center;
     justify-items: center;
     grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-    min-height: 40px;
+    min-height: 45px;
     border-bottom: 1px solid #dddddd;
   }
 
   .table-header,
   .table-cell {
-    padding: 14px 40px 14px 16px;
+    min-width: 15px;
+    padding: 10px 20px;
   }
 
-  .total-time {
+  .total-time-cell {
     justify-self: flex-end;
-    margin-right: 373px;
+    margin-right: 380px;
   }
 
   .total-time-header {
     justify-self: flex-start;
-    margin-left: 211px;
+    margin-left: 220px;
+    color: inherit !important;
+    font-weight: bold !important;
+  }
+
+  .total-time-row {
+    color: black;
+    font-weight: bold;
+  }
+
+  .table-header {
+    font-weight: 400;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.54);
   }
 
   .button {

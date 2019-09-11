@@ -1,6 +1,6 @@
 <template>
   <div class="clock-timer">
-    <p ref="counter">00:00:00</p>
+    <time ref="counter">00:00:00</time>
   </div>
 </template>
 
@@ -35,17 +35,20 @@
 			timer() {
 				this.interval = setTimeout(this.add, 1000);
 			},
+			setInitialState() {
+				clearTimeout(this.interval);
+				this.$refs.counter.textContent = '00:00:00';
+				this.seconds = 0;
+				this.minutes = 0;
+				this.hours = 0;
+			},
 		},
 		watch: {
 			startIsClicked() {
 				if (this.startIsClicked) {
 					this.timer();
 				} else {
-					clearTimeout(this.interval);
-					this.$refs.counter.textContent = '00:00:00';
-					this.seconds = 0;
-					this.minutes = 0;
-					this.hours = 0;
+					this.setInitialState();
 				}
 			},
 		},
