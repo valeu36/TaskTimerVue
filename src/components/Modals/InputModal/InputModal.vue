@@ -35,7 +35,6 @@
 				deleteTask: false,
 			};
 		},
-		methods: {},
 	};
 </script>
 

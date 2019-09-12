@@ -38,7 +38,6 @@
 				deleteTask: false,
 			};
 		},
-		methods: {},
 	};
 </script>
 

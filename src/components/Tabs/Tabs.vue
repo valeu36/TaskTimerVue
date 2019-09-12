@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div class="tabs">
       <ul class="tabs-list">
         <li class="list-item" v-for="tab in tabs" :class="{ 'is-active': tab.isActive }">
@@ -11,6 +12,7 @@
     <div class="tabs-details">
       <slot></slot>
     </div>
+
   </div>
 </template>
 

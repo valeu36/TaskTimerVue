@@ -1,12 +1,12 @@
 <template>
   <div class="timer-container">
-    <start-task-input-modal v-if="showModal" @close="showModal = false">
-    </start-task-input-modal>
+    <input-modal v-if="showModal" @close="showModal = false">
+    </input-modal>
     <form class="timer-form">
       <input class="input-task" type="text" placeholder="Task name" v-model="taskName">
-      <start-task-timer :startIsClicked="isStartClicked">
-      </start-task-timer>
-      <button class="button" @click.prevent="startOrStopTask">
+      <timer :startIsClicked="isStartClicked">
+      </timer>
+      <button class="button" @click.prevent="toggleTask">
         {{isStartClicked ? 'STOP' : 'START'}}
       </button>
     </form>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-	import Timer from './Timer/Timer';
+	import Timer from './Clock/Clock';
 	import moment from 'moment';
 	import { EventBus } from '../../main';
 	import InputModal from '../Modals/InputModal/InputModal';
@@ -34,11 +34,11 @@
 			};
 		},
 		components: {
-			startTaskTimer: Timer,
-			startTaskInputModal: InputModal,
+			Timer,
+			InputModal,
 		},
 		methods: {
-			startOrStopTask() {
+			toggleTask() {
 				this.isStartClicked = !this.isStartClicked;
 				if (this.isStartClicked) {
 					this.start();

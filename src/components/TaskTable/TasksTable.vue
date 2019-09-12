@@ -1,7 +1,9 @@
 <template>
   <div class="table-container">
-    <task-table-modal-delete v-if="showModal" @close="showModal = false" @delete="deleteTask()">
-    </task-table-modal-delete>
+
+    <modal-delete v-if="showModal" @close="showModal = false" @delete="deleteTask">
+    </modal-delete>
+
     <table class="tasks-table">
       <thead class="table-head">
       <tr class="table-row">
@@ -49,6 +51,7 @@
       </template>
       </tbody>
     </table>
+
   </div>
 </template>
 
@@ -64,7 +67,7 @@
 
 	export default {
 		components: {
-			taskTableModalDelete: ModalDelete,
+			ModalDelete,
 		},
 		data() {
 			return {
@@ -115,9 +118,6 @@
 				this.timeSpentArray.push(timeSpent);
 				this.milliseconds = this.calculateMs(this.timeSpentArray);
 				this.convertTime(this.milliseconds);
-			});
-			EventBus.$on('deleteAgreementWasClicked', () => {
-
 			});
 		},
 	};

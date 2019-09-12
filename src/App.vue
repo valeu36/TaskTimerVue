@@ -1,23 +1,25 @@
 <template>
   <div class="app-container">
-    <app-start-task>
-    </app-start-task>
-    <app-tabs>
-      <app-tab name="TASK LOG" selected="true">
-        <app-tasks-table>
-        </app-tasks-table>
-      </app-tab>
-      <app-tab name="TASK CHART">
+
+    <start-task/>
+
+    <tabs>
+      <tab name="TASK LOG" selected="true">
+        <tasks-table>
+        </tasks-table>
+      </tab>
+      <tab name="TASK CHART">
         <div class="task-chart-content">
           SOME CONTENT
         </div>
-      </app-tab>
-    </app-tabs>
+      </tab>
+    </tabs>
+
   </div>
 </template>
 
 <script>
-	import StartTask from './components/StartTask/StartTask';
+	import StartTask from './components/Timer/Timer';
 	import TasksTable from './components/TaskTable/TasksTable';
 	import Tabs from './components/Tabs/Tabs';
 	import Tab from './components/Tabs/Tab/Tab';
@@ -26,12 +28,11 @@
 	export default {
 		name: 'app',
 		components: {
+			StartTask,
+			TasksTable,
+			Tabs,
 			Tab,
-			appStartTask: StartTask,
-			appTasksTable: TasksTable,
-			appTabs: Tabs,
-			appTab: Tab,
-			appDeleteModal: DeleteModal,
+			DeleteModal,
 		},
 	};
 </script>
