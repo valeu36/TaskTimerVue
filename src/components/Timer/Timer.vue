@@ -135,4 +135,5 @@
   .input-task:focus {
     border-bottom: 2px solid #303f9f;
   }
+
 </style>

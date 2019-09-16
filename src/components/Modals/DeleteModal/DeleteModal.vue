@@ -1,21 +1,21 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
+    <div class="modals-mask">
+      <div class="modals-wrapper">
+        <div class="modals-container">
 
-          <div class="modal-header">
+          <div class="modals-header">
             <slot name="header" class="agreement-modal">
               Are you sure you want to delete the task?
             </slot>
           </div>
 
-          <div class="modal-footer">
+          <div class="modals-footer">
             <slot name="footer">
-              <button class="modal-button" @click="$emit('close')">
+              <button class="modals-button" @click="$emit('close')">
                 NO
               </button>
-              <button class="modal-button" @click="$emit('delete')">
+              <button class="modals-button" @click="$emit('delete')">
                 YES
               </button>
             </slot>
@@ -38,7 +38,7 @@
 </script>
 
 <style scoped>
-  .modal-mask {
+  .modals-mask {
     position: fixed;
     z-index: 9998;
     top: 0;
@@ -50,12 +50,12 @@
     transition: opacity .3s ease;
   }
 
-  .modal-wrapper {
+  .modals-wrapper {
     display: table-cell;
     vertical-align: middle;
   }
 
-  .modal-container {
+  .modals-container {
     width: 300px;
     min-height: 100px;
     margin: 0px auto;
@@ -67,17 +67,17 @@
     font-family: Helvetica, Arial, sans-serif;
   }
 
-  .modal-header {
+  .modals-header {
     text-align: center;
     font-size: 18px;
   }
 
-  .modal-footer {
+  .modals-footer {
     display: flex;
     justify-content: space-around;
   }
 
-  .modal-button {
+  .modals-button {
     width: 50px;
     border: 0;
     border-radius: 5px;
@@ -90,7 +90,7 @@
     text-align: center;
   }
 
-  .modal-button:hover {
+  .modals-button:hover {
     background-color: rgba(63, 81, 181, 0.1);
   }
 
