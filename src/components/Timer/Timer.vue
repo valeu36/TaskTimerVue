@@ -1,14 +1,17 @@
 <template>
-  <div class="timer-container">
+  <div class="container">
 
     <input-modal v-if="showModal" @close="showModal = false" />
 
+    <div class="text-center">
       <input class="input-task" type="text" placeholder="Task name" v-model="taskName">
       <timer :startIsClicked="isStartClicked" :difference="difference">
       </timer>
-      <button class="button" @click.prevent="toggleTask">
+      <button type="button" class="btn btn-light m-2" @click.prevent="toggleTask">
         {{isStartClicked ? 'STOP' : 'START'}}
       </button>
+    </div>
+
 
   </div>
 </template>
@@ -119,12 +122,6 @@
 </script>
 
 <style scoped>
-  .timer-container {
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-  }
-
   .input-task {
     margin: 15px auto;
     width: 200px;
@@ -138,20 +135,4 @@
   .input-task:focus {
     border-bottom: 2px solid #303f9f;
   }
-
-  .button {
-    margin: 15px auto;
-    width: 80px;
-    padding: 10px;
-    border: 0;
-    background-color: white;
-    box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.6);
-    cursor: pointer;
-    outline: none;
-  }
-
-  .button:active {
-    transform: translateY(1px);
-  }
-
 </style>

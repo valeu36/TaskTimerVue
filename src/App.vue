@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="container">
 
     <start-task/>
 
@@ -29,14 +29,7 @@
 </script>
 
 <style>
-  .app-container {
-    margin: 0 auto;
-    width: 1200px;
-    font-family: 'Roboto', sans-serif;
-  }
-
-  .task-chart-content {
-    text-align: center;
-    margin: 50px
+  html {
+    font-size: 1rem;
   }
 </style>

@@ -1,65 +1,65 @@
 <template>
 
-  <div class="table-container" v-if="!isLoading">
+  <div class="table-responsive" v-if="!isLoading">
 
-    <modal-delete v-if="showModal" @close="showModal = false" @delete="deleteTask">
-    </modal-delete>
+    <modal-delete v-if="showModal" @close="showModal = false" @delete="deleteTask"/>
 
     <div class="table-name">
       TASK LOG
     </div>
 
-    <table class="tasks-table">
-      <thead class="table-head">
-      <tr class="table-row">
-        <th class="table-header"
-            v-for="(header, index) in tableHeaders"
-            :key="index">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th class="font-weight-normal" v-for="(header, index) in tableHeaders" :key="index">
           {{header}}
         </th>
       </tr>
       </thead>
-      <tbody class="table-body">
+      <tbody>
       <template v-if="tableContent.rowContent.length">
-        <tr
-          class="table-row"
-          v-for="(content, index) in tableContent.rowContent"
-          :key="index">
-          <td class="table-cell">
+        <tr class="" v-for="(content, index) in tableContent.rowContent" :key="index">
+          <td>
             {{index + 1}}
           </td>
-          <td class="table-cell" v-for="cell in content">
+          <td v-for="cell in content">
             {{cell}}
           </td>
-          <button class="button">
-            INFO
-          </button>
-          <button class="button" @click="setDialog(index)">
-            DELETE
-          </button>
+          <td>
+            <button type="button" class="btn btn-light">
+              INFO
+            </button>
+          </td>
+          <td>
+            <button type="button" class="btn btn-light" @click="setDialog(index)">
+              DELETE
+            </button>
+          </td>
         </tr>
-        <tr class="table-row total-time-row">
-          <th class="table-header total-time-header">
-            Total
+        <tr>
+          <th colspan="4">
+            Total time spent:
           </th>
-          <td class="table-cell total-time-cell">
+          <td  colspan="4" class="font-weight-bold">
             {{timeSpent}}
           </td>
         </tr>
       </template>
+
       <template v-else>
-        <tr class="table-row">
-          <td>
+        <tr class="font-weight-bold">
+          <td class="">
             Tasks Not Found
           </td>
         </tr>
       </template>
+
       </tbody>
     </table>
 
   </div>
 
-    <spinner v-else/>
+  <spinner v-else/>
 
 </template>
 
@@ -139,29 +139,29 @@
 					.then(data => {
 						if (name === 'data') {
 							this.tableContent.rowContent = data.data;
-            }
+						}
 						if (name === 'timeSpentArray') {
 							this.timeSpentArray = data.data;
-            }
-            this.nullCheck();
-            this.isLoading = false;
+						}
+						this.nullCheck();
+						this.isLoading = false;
 					})
-          .then(() => {
-          	this.updateTime(this.timeSpentArray, this.milliseconds);
-          })
+					.then(() => {
+						this.updateTime(this.timeSpentArray, this.milliseconds);
+					})
 					.catch(error => {
 						console.log(error);
 					});
 			},
-      nullCheck() {
+			nullCheck() {
 				if (this.tableContent.rowContent === null
-          || this.tableContent.rowContent === undefined ) {
+					|| this.tableContent.rowContent === undefined) {
 					this.tableContent.rowContent = [];
-        }
+				}
 				if (this.timeSpentArray === null || this.timeSpentArray === undefined) {
 					this.timeSpentArray = [];
-        }
-      }
+				}
+			},
 		},
 		mounted() {
 			this.isLoading = true;
@@ -176,74 +176,15 @@
 			this.getData('data');
 			this.getData('timeSpentArray');
 		},
- 	};
+	};
 </script>
 
 
 <style scoped>
-  .table-container {
-    font-weight: lighter;
-    font-size: 14px;
-    color: rgba(0, 0, 0, 1);
-  }
 
-  .tasks-table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid #dddddd;
-    border-radius: 3px;
-  }
-
-  .table-row {
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-    min-height: 45px;
-    border-bottom: 1px solid #dddddd;
-  }
-
-  .table-header,
-  .table-cell {
-    min-width: 15px;
-    padding: 10px 20px;
-  }
-
-  .total-time-cell {
-    justify-self: flex-end;
-    margin-right: 380px;
-  }
-
-  .total-time-header {
-    justify-self: flex-start;
-    margin-left: 220px;
-    color: inherit !important;
-    font-weight: bold !important;
-  }
-
-  .total-time-row {
-    color: black;
-    font-weight: bold;
-  }
-
-  .table-header {
-    font-weight: 400;
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.54);
-  }
-
-  .button {
-    width: 80px;
-    height: 30px;
-    border: 0;
-    background-color: white;
-    box-shadow: 0px 3px 5px -2px rgba(0, 0, 0, 0.7);
-    cursor: pointer;
-    outline: none;
-  }
-
-  .button:active {
-    transform: translateY(1px);
+  td, th {
+    /*text-align: center;*/
+    vertical-align: middle;
   }
 
   .table-name {
