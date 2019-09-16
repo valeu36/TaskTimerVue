@@ -6,7 +6,7 @@
 
 <script>
 	export default {
-		props: ['startIsClicked'],
+		props: ['startIsClicked', 'difference'],
 		data() {
 			return {
 				seconds: 0,
@@ -46,6 +46,9 @@
 		watch: {
 			startIsClicked() {
 				if (this.startIsClicked) {
+					this.seconds = this.difference.seconds();
+					this.minutes = this.difference.minutes();
+					this.hours = this.difference.hours();
 					this.timer();
 				} else {
 					this.setInitialState();

@@ -10,21 +10,17 @@
             </slot>
           </div>
 
-          <div class="modal-body">
-            <slot name="body">
-            </slot>
-          </div>
-
           <div class="modal-footer">
             <slot name="footer">
-              <button class="modal-button no-button" @click="$emit('close')">
+              <button class="modal-button" @click="$emit('close')">
                 NO
               </button>
-              <button class="modal-button yes-button" @click="$emit('delete')">
+              <button class="modal-button" @click="$emit('delete')">
                 YES
               </button>
             </slot>
           </div>
+
         </div>
       </div>
     </div>
@@ -71,18 +67,14 @@
     font-family: Helvetica, Arial, sans-serif;
   }
 
-  .modal-header h3 {
-    margin-top: 0;
-    color: #42b983;
-  }
-
   .modal-header {
     text-align: center;
     font-size: 18px;
   }
 
-  .modal-body {
-    margin: 20px 0;
+  .modal-footer {
+    display: flex;
+    justify-content: space-around;
   }
 
   .modal-button {
@@ -100,14 +92,6 @@
 
   .modal-button:hover {
     background-color: rgba(63, 81, 181, 0.1);
-  }
-
-  .yes-button {
-    float: right;
-  }
-
-  .no-button {
-
   }
 
   .modal-enter {

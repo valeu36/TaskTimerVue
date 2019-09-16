@@ -68,18 +68,14 @@
     font-family: Helvetica, Arial, sans-serif;
   }
 
-  .modal-header h3 {
-    margin-top: 0;
-    color: #42b983;
-  }
-
   .modal-header {
     text-align: center;
     font-size: 18px;
   }
 
-  .modal-body {
-    margin: 20px 0;
+  .modal-footer {
+    display: flex;
+    justify-content: center;
   }
 
   .modal-button {

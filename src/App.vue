@@ -3,17 +3,8 @@
 
     <start-task/>
 
-    <tabs>
-      <tab name="TASK LOG" selected="true">
-        <tasks-table>
-        </tasks-table>
-      </tab>
-      <tab name="TASK CHART">
-        <div class="task-chart-content">
-          SOME CONTENT
-        </div>
-      </tab>
-    </tabs>
+    <tasks-table>
+    </tasks-table>
 
   </div>
 </template>

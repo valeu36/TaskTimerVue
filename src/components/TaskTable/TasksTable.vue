@@ -1,8 +1,13 @@
 <template>
-  <div class="table-container">
+
+  <div class="table-container" v-if="!isLoading">
 
     <modal-delete v-if="showModal" @close="showModal = false" @delete="deleteTask">
     </modal-delete>
+
+    <div class="table-name">
+      TASK LOG
+    </div>
 
     <table class="tasks-table">
       <thead class="table-head">
@@ -53,13 +58,18 @@
     </table>
 
   </div>
+
+    <spinner v-else/>
+
 </template>
 
 <script>
 
 	import { EventBus } from '../../main';
 	import moment from 'moment';
+	import axios from 'axios';
 	import ModalDelete from '../Modals/DeleteModal/DeleteModal';
+	import Spinner from '../Spinner/Spinner';
 
 	const TABLE_HEADERS = [
 		'№', 'Tasks', 'Time Start', 'Time End', 'Time Spend', 'Info', 'Delete',
@@ -68,6 +78,7 @@
 	export default {
 		components: {
 			ModalDelete,
+			Spinner,
 		},
 		data() {
 			return {
@@ -80,6 +91,7 @@
 				milliseconds: 0,
 				showModal: false,
 				indexOfDeletedItem: null,
+				isLoading: false,
 			};
 		},
 		methods: {
@@ -90,6 +102,8 @@
 				this.timeSpentArray = this.timeSpentArray
 					.filter((element, index) => index !== this.indexOfDeletedItem);
 				this.updateTime(this.timeSpentArray, this.millisecond);
+				this.sendData(this.tableContent.rowContent, 'data');
+				this.sendData(this.timeSpentArray, 'timeSpentArray');
 				this.indexOfDeletedItem = null;
 				this.showModal = false;
 			},
@@ -104,23 +118,65 @@
 			},
 			updateTime(array, milliseconds) {
 				milliseconds = this.calculateMs(array);
-				this.convertTime(milliseconds);
+				return this.convertTime(milliseconds);
 			},
 			setDialog(idx) {
 				this.showModal = true;
 				this.indexOfDeletedItem = idx;
 			},
+			sendData(data, name) {
+				axios.put(`https://tasktimervue.firebaseio.com/${name}.json`, data)
+					.then(response => {
+						console.log('data was sent');
+					})
+					.catch(error => console.log(error));
+			},
+			getData(name) {
+				axios.get(`https://tasktimervue.firebaseio.com/${name}.json`)
+					.then(response => {
+						return response;
+					})
+					.then(data => {
+						if (name === 'data') {
+							this.tableContent.rowContent = data.data;
+            }
+						if (name === 'timeSpentArray') {
+							this.timeSpentArray = data.data;
+            }
+            this.nullCheck();
+            this.isLoading = false;
+					})
+          .then(() => {
+          	this.updateTime(this.timeSpentArray, this.milliseconds);
+          })
+					.catch(error => {
+						console.log(error);
+					});
+			},
+      nullCheck() {
+				if (this.tableContent.rowContent === null
+          || this.tableContent.rowContent === undefined ) {
+					this.tableContent.rowContent = [];
+        }
+				if (this.timeSpentArray === null || this.timeSpentArray === undefined) {
+					this.timeSpentArray = [];
+        }
+      }
 		},
 		mounted() {
+			this.isLoading = true;
 			EventBus.$on('stopWasClicked', (taskInfo) => {
-				const [content, timeSpent] = taskInfo;
-				this.tableContent.rowContent.push(content);
-				this.timeSpentArray.push(timeSpent);
-				this.milliseconds = this.calculateMs(this.timeSpentArray);
-				this.convertTime(this.milliseconds);
+				const { tableContent, milliseconds } = taskInfo;
+				this.tableContent.rowContent.push(tableContent);
+				this.timeSpentArray.push(milliseconds);
+				this.sendData(this.tableContent.rowContent, 'data');
+				this.sendData(this.timeSpentArray, 'timeSpentArray');
+				this.updateTime(this.timeSpentArray, this.millisecond);
 			});
+			this.getData('data');
+			this.getData('timeSpentArray');
 		},
-	};
+ 	};
 </script>
 
 
@@ -189,4 +245,16 @@
   .button:active {
     transform: translateY(1px);
   }
+
+  .table-name {
+    width: 100%;
+    height: 43px;
+    background-color: #3f51b5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid #f50057;
+    color: rgba(255, 255, 255, 1);
+  }
+
 </style>
