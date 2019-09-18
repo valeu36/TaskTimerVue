@@ -8,10 +8,10 @@
       TASK LOG
     </div>
 
-    <table class="table table-hover">
+    <table class="table table-hover table-striped table-sm">
       <thead>
       <tr>
-        <th class="font-weight-normal" v-for="(header, index) in tableHeaders" :key="index">
+        <th class="font-weight-normal text-secondary small" v-for="(header, index) in tableHeaders" :key="index">
           {{header}}
         </th>
       </tr>
@@ -26,7 +26,10 @@
             {{cell}}
           </td>
           <td>
-            <button type="button" class="btn btn-light">
+<!--              <router-link class="btn btn-light" :to="`/task/${index + 1}`" tag="button" :cardNumber="index + 1">-->
+<!--                <a class="text-dark">INFO</a>-->
+<!--              </router-link>-->
+            <button type="button" class="btn btn-light" @click="navigateToTaskCard(index + 1)">
               INFO
             </button>
           </td>
@@ -48,7 +51,7 @@
 
       <template v-else>
         <tr class="font-weight-bold">
-          <td class="">
+          <td>
             Tasks Not Found
           </td>
         </tr>
@@ -56,8 +59,7 @@
 
       </tbody>
     </table>
-
-  </div>
+    </div>
 
   <spinner v-else/>
 
@@ -162,8 +164,13 @@
 					this.timeSpentArray = [];
 				}
 			},
+      navigateToTaskCard(index) {
+				this.$router.push({name: 'TaskInfo', params:{id:index}});
+				// this.$router.go(1);
+      }
 		},
 		mounted() {
+			console.log('mounted');
 			this.isLoading = true;
 			EventBus.$on('stopWasClicked', (taskInfo) => {
 				const { tableContent, milliseconds } = taskInfo;
@@ -183,13 +190,12 @@
 <style scoped>
 
   td, th {
-    /*text-align: center;*/
     vertical-align: middle;
   }
 
   .table-name {
     width: 100%;
-    height: 43px;
+    height: 48px;
     background-color: #3f51b5;
     display: flex;
     align-items: center;

@@ -4,10 +4,10 @@
     <input-modal v-if="showModal" @close="showModal = false" />
 
     <div class="text-center">
-      <input class="input-task" type="text" placeholder="Task name" v-model="taskName">
+      <input class="input-task" type="text" placeholder="Task name" v-model="taskName" @keyup.enter="toggleTask">
       <timer :startIsClicked="isStartClicked" :difference="difference">
       </timer>
-      <button type="button" class="btn btn-light m-2" @click.prevent="toggleTask">
+      <button type="button" class="btn btn-light m-2" @click="toggleTask">
         {{isStartClicked ? 'STOP' : 'START'}}
       </button>
     </div>
