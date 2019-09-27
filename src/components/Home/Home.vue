@@ -1,26 +1,22 @@
 <template>
-  <div class="container">
+	<div class="container">
+		<start-task />
 
-    <start-task/>
-
-    <tasks-table>
-    </tasks-table>
-
-  </div>
+		<tasks-table></tasks-table>
+	</div>
 </template>
 
 <script>
-	import StartTask from '../Timer/Timer';
-	import TasksTable from '../TaskTable/TasksTable';
+import StartTask from '../Timer/Timer';
+import TasksTable from '../TaskTable/TasksTable';
 
-	export default {
-		name: 'app',
-		components: {
-			StartTask,
-			TasksTable,
-		},
-	};
+export default {
+	name: 'app',
+	components: {
+		StartTask,
+		TasksTable,
+	},
+};
 </script>
 
-<style>
-</style>
+<style></style>

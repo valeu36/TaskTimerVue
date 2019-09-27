@@ -1,32 +1,50 @@
 <template>
-	<div class="table-responsive" v-if="!isLoading">
-		<modal-delete v-if="showModal" @close="showModal = false" @delete="deleteTask" />
+	<div class="table-responsive mt-3" v-if="!isLoading">
+		<modal-delete
+			v-if="showModal"
+			@close="showModal = false"
+			@delete="deleteTask"
+		/>
 
-		<table class="table table-hover table-striped table-sm">
+		<table class="table table-hover table-sm">
 			<thead>
 				<tr>
 					<th
 						class="font-weight-normal text-secondary small"
 						v-for="(header, index) in tableHeaders"
 						:key="index"
-					>{{header}}</th>
+					>
+						{{ header }}
+					</th>
 				</tr>
 			</thead>
 			<tbody>
-				<template v-if="tableContent.rowContent.length">
-					<tr class v-for="(content, index) in tableContent.rowContent" :key="index">
-						<td>{{index + 1}}</td>
-						<td v-for="(cell, idx) in content" :key="idx">{{cell}}</td>
+				<template v-if="tableContent.length">
+					<tr class v-for="(content, index) in tableContent" :key="index">
+						<td>{{ index + 1 }}</td>
+						<td v-for="(cell, idx) in content" :key="idx">{{ cell }}</td>
 						<td>
-							<button type="button" class="btn btn-light" @click="navigateToTaskCard(index + 1)">INFO</button>
+							<button
+								type="button"
+								class="btn btn-light"
+								@click="navigateToTaskCard(index)"
+							>
+								INFO
+							</button>
 						</td>
 						<td>
-							<button type="button" class="btn btn-light" @click="setDialog(index)">DELETE</button>
+							<button
+								type="button"
+								class="btn btn-light"
+								@click="setDialog(index)"
+							>
+								DELETE
+							</button>
 						</td>
 					</tr>
 					<tr>
 						<th colspan="4">Total time spent:</th>
-						<td colspan="4" class="font-weight-bold">{{timeSpent}}</td>
+						<td colspan="4" class="font-weight-bold">{{ timeSpent }}</td>
 					</tr>
 				</template>
 
@@ -43,9 +61,10 @@
 </template>
 
 <script>
-import { EventBus } from '../../main';
+import { eventBus } from '../../main';
 import moment from 'moment';
-import axios from 'axios';
+import api from '../../api/index';
+
 import ModalDelete from '../Modals/DeleteModal/DeleteModal';
 import Spinner from '../Spinner/Spinner';
 
@@ -67,9 +86,7 @@ export default {
 	data() {
 		return {
 			tableHeaders: TABLE_HEADERS,
-			tableContent: {
-				rowContent: [],
-			},
+			tableContent: [],
 			timeSpentArray: [],
 			timeSpent: '',
 			milliseconds: 0,
@@ -77,23 +94,20 @@ export default {
 			indexOfDeletedItem: null,
 			isLoading: false,
 		};
-  },
-  computed: {
-
-  },
+	},
+	computed: {},
 	methods: {
 		deleteTask() {
-			EventBus.$emit('deleteTaskWasClicked');
-			this.tableContent.rowContent = this.tableContent.rowContent.filter(
+			eventBus.$emit('deleteTaskWasClicked');
+			this.tableContent = this.tableContent.filter(
 				(element, index) => index !== this.indexOfDeletedItem
 			);
 			this.timeSpentArray = this.timeSpentArray.filter(
 				(element, index) => index !== this.indexOfDeletedItem
 			);
 			this.updateTime(this.timeSpentArray, this.millisecond);
-			// mby sendData shold be in computed
-			this.sendData(this.tableContent.rowContent, 'data');
-			this.sendData(this.timeSpentArray, 'timeSpentArray');
+			this.updateTableContent(this.tableContent);
+			this.updateTimeSpentArray(this.timeSpentArray);
 			this.indexOfDeletedItem = null;
 			this.showModal = false;
 		},
@@ -115,69 +129,53 @@ export default {
 			this.showModal = true;
 			this.indexOfDeletedItem = idx;
 		},
-		sendData(data, name) {
-			axios
-				.put(`https://tasktimervue.firebaseio.com/${name}.json`, data)
-				.then((response) => {
-					console.log('data was sent');
-				})
-				.catch((error) => console.log(error));
+		onStopWasClicked() {
+			eventBus.$on('stopWasClicked', (taskInfo) => {
+				const { tableContent, milliseconds } = taskInfo;
+				this.tableContent.push(tableContent);
+				this.timeSpentArray.push(milliseconds);
+				this.updateTableContent(this.tableContent);
+				this.updateTimeSpentArray(this.timeSpentArray);
+				this.updateTime(this.timeSpentArray, this.millisecond);
+			});
 		},
-		getData(name) {
-			axios
-				.get(`https://tasktimervue.firebaseio.com/${name}.json`)
-				.then((response) => {
-					return response;
-				})
-				.then((data) => {
-					if (name === 'data') {
-						this.tableContent.rowContent = data.data;
-					}
-					if (name === 'timeSpentArray') {
-						this.timeSpentArray = data.data;
-					}
-					this.nullCheck();
-					this.isLoading = false;
-				})
-				.then(() => {
-					this.updateTime(this.timeSpentArray, this.milliseconds);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
+    	navigateToTaskCard(index) {
+			this.$router.push({ name: 'TaskInfo', params: { id: index + 1 } });
 		},
-		nullCheck() {
-			if (
-				this.tableContent.rowContent === null ||
-				this.tableContent.rowContent === undefined
-			) {
-				this.tableContent.rowContent = [];
-			}
-			if (this.timeSpentArray === null || this.timeSpentArray === undefined) {
+		async updateTableContent(data) {
+			await api.updateTableContent('/data.json', data);
+		},
+		async updateTimeSpentArray(data) {
+			await api.updateTimeSpentArray('/timeSpentArray.json', data);
+		},
+		async getTableContent() {
+			const { data } = await api.tableContent('/data.json');
+			if (!data) {
+				this.tableContent = [];
+      } else {
+				this.tableContent = data;
+      }
+		},
+		async getTimeSpentArray() {
+			const { data } = await api.timeSpentArray('/timeSpentArray.json');
+			if (!data) {
 				this.timeSpentArray = [];
-			}
-		},
-		navigateToTaskCard(index) {
-			this.$router.push({ name: 'TaskInfo', params: { id: index } });
-		},
+      } else {
+				this.timeSpentArray = data;
+      }
+		}
 	},
-	mounted() {
+	async mounted() {
 		console.log('mounted');
 		this.isLoading = true;
-		EventBus.$on('stopWasClicked', (taskInfo) => {
-			const { tableContent, milliseconds } = taskInfo;
-			this.tableContent.rowContent.push(tableContent);
-			this.timeSpentArray.push(milliseconds);
-			this.sendData(this.tableContent.rowContent, 'data');
-			this.sendData(this.timeSpentArray, 'timeSpentArray');
-			this.updateTime(this.timeSpentArray, this.millisecond);
-		});
-		this.getData('data');
-		this.getData('timeSpentArray');
+		await this.getTableContent();
+		await this.getTimeSpentArray();
+		this.onStopWasClicked();
+		this.updateTime(this.timeSpentArray, this.millisecond);
+		this.isLoading = false;
 	},
 };
 </script>
-
 
 <style scoped>
 td,
