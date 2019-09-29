@@ -21,8 +21,9 @@
 							<b>Task spent:</b> <span>{{ taskSpent }}</span>
 						</p>
 						<hr />
-						<a href="#" class="card-link">Card link</a>
-						<a href="#" class="card-link">Another link</a>
+						<button class="btn-light border-0 rounded" @click="navigateToHome">
+							Home
+						</button>
 					</div>
 				</div>
 			</template>
@@ -73,6 +74,9 @@ export default {
 			this.taskStart = taskStart;
 			this.taskEnd = taskEnd;
 			this.taskSpent = taskSpent;
+		},
+		navigateToHome() {
+			this.$router.push({ name: 'Home' });
 		},
 	},
 	async mounted() {
