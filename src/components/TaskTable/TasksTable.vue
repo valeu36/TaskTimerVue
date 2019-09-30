@@ -143,13 +143,13 @@ export default {
 			this.$router.push({ name: 'TaskInfo', params: { id: index + 1 } });
 		},
 		async updateTableContent(data) {
-			await api.updateTableContent('/data.json', data);
+			await api.setData('/data.json', data);
 		},
 		async updateTimeSpentArray(data) {
-			await api.updateTimeSpentArray('/timeSpentArray.json', data);
+			await api.setData('/timeSpentArray.json', data);
 		},
 		async getTableContent() {
-			const { data } = await api.tableContent('/data.json');
+			const { data } = await api.getData('/data.json');
 			if (!data) {
 				this.tableContent = [];
       } else {
@@ -157,7 +157,7 @@ export default {
       }
 		},
 		async getTimeSpentArray() {
-			const { data } = await api.timeSpentArray('/timeSpentArray.json');
+			const { data } = await api.getData('/timeSpentArray.json');
 			if (!data) {
 				this.timeSpentArray = [];
       } else {

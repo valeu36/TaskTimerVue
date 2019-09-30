@@ -49,9 +49,6 @@ export default {
 			this.hours = 0;
 		},
 	},
-  mounted() {
-    console.log('Clock is mounted');
-  },
 	watch: {
 		startIsClicked() {
 			if (this.startIsClicked) {

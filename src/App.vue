@@ -1,10 +1,46 @@
 <template>
-	<router-view></router-view>
+	<router-view /> <!--v-if="isLoading">-->
 </template>
 
 <script>
+// import api from './api/index';
+
 export default {
 	name: 'app',
+	// data() {
+	// 	return {
+	// 		refCount: 0,
+	// 		isLoading: false,
+	// 	};
+	// },
+	// created() {
+	// 	api.interceptors.request.use((config) => {
+  //     this.setLoading(true);
+  //     return config;
+  //   }, (error) => {
+  //     this.setLoading(false);
+  //     return Promise.reject(error);
+  //   });
+  //
+  //   api.interceptors.response.use((response) => {
+  //     this.setLoading(false);
+  //     return response;
+  //   }, (error) => {
+  //     this.setLoading(false);
+  //     return Promise.reject(error);
+  //   });
+	// },
+  // methods: {
+	// 	setLoading(isLoading) {
+  //     if (isLoading) {
+  //       this.refCount++;
+  //       this.isLoading = true;
+  //     } else if (this.refCount > 0) {
+  //       this.refCount--;
+  //       this.isLoading = (this.refCount > 0);
+  //     }
+  //   }
+  // }
 };
 </script>
 

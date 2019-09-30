@@ -99,10 +99,10 @@ export default {
 			this.difference = moment.duration(milliseconds);
 		},
 		async updateIsStartClicked(data) {
-			await api.updateIsStartClicked('/isStartClicked.json', data);
+			await api.setData('/isStartClicked.json', data);
 		},
 		async getIsStartClicked() {
-			const { data } = await api.isStartClicked('/isStartClicked.json');
+			const { data } = await api.getData('/isStartClicked.json');
 			this.isStartClicked = data[0];
 			this.timeStart = data[1];
 			this.formatTime();

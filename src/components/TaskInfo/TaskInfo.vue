@@ -63,7 +63,7 @@ export default {
 	},
 	methods: {
 		async getTableContent() {
-			const { data } = await api.tableContent('/data.json');
+			const { data } = await api.getData('/data.json');
 			if (data.length < this.id) {
 				this.isPageExist = false;
 				return;
