@@ -1,5 +1,5 @@
 <template>
-	<div class="table-responsive mt-3" v-if="!isLoading">
+	<div class="table-responsive mt-3">
 		<modal-delete
 			v-if="showModal"
 			@close="showModal = false"
@@ -57,7 +57,6 @@
 		</table>
 	</div>
 
-	<spinner v-else />
 </template>
 
 <script>

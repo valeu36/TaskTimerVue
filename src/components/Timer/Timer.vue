@@ -55,7 +55,7 @@ export default {
 			this.startPoint = moment();
 			this.timeStart = this.startPoint.format('HH:mm:ss');
 			this.formatTime();
-			this.updateIsStartClicked([this.isStartClicked, this.timeStart]);
+			this.updateIsStartClicked({user_id: 1, is_start: this.isStartClicked});
 		},
 		stop() {
 			if (!this.taskName) {
@@ -99,10 +99,13 @@ export default {
 			this.difference = moment.duration(milliseconds);
 		},
 		async updateIsStartClicked(data) {
-			await api.setData('/isStartClicked.json', data);
+			await api.store('/timer_status', data);
 		},
 		async getIsStartClicked() {
-			const { data } = await api.getData('/isStartClicked.json');
+			console.log('ok');
+			const { data } = await api.index('/timer_status');
+			console.log(data);
+			console.log('okay');
 			this.isStartClicked = data[0];
 			this.timeStart = data[1];
 			this.formatTime();
