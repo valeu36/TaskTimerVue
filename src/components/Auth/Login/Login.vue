@@ -37,19 +37,12 @@ export default {
 	},
 	methods: {
 		async onSubmit() {
-			// console.log(this.email + ' ' + this.password);
-			const { data } = await this.$store.dispatch('login', {
+			await this.$store.dispatch('login', {
 				email: this.email,
 				password: this.password,
 			});
-			// await this.$store.dispatch('checkLogged');
 			await this.$router.push('/');
 		},
-	},
-	mounted() {
-		// console.log(this.$store.getters.isLogged);
-		// console.log(this.$store.getters.token)
-        console.log('LUL BLEAT')
-	},
+	}
 };
 </script>

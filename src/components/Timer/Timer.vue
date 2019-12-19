@@ -3,13 +3,7 @@
 		<input-modal v-if="showModal" @close="showModal = false" />
 
 		<div class="text-center">
-			<input
-				class="input-task"
-				type="text"
-				placeholder="Task name"
-				v-model="taskName"
-				@keyup.enter="toggleTask"
-			/>
+			<input class="input-task" type="text" placeholder="Task name" v-model="taskName" @keyup.enter="toggleTask" />
 			<timer :startIsClicked="isStartClicked" :difference="difference"></timer>
 			<button type="button" class="btn btn-light m-2" @click="toggleTask">
 				{{ isStartClicked ? 'STOP' : 'START' }}
@@ -33,10 +27,8 @@ export default {
 			taskName: '',
 			timeStart: '',
 			timeEnd: '',
-			timeSpent: '',
 			startPoint: 0,
 			endPoint: 0,
-			tableContent: [],
 			showModal: false,
 			difference: 0,
 			data: {},
@@ -55,8 +47,11 @@ export default {
 			this.startPoint = moment();
 			this.timeStart = this.startPoint.format('YYYY-MM-DD HH:mm:ss');
 			this.formatTime();
+			// TODO try to make formatTime() functionality on back-end
 			this.updateIsStartClicked({
-                is_start: this.isStartClicked, start_time: this.timeStart});
+				is_start: this.isStartClicked,
+				start_time: this.timeStart,
+			});
 		},
 		stop() {
 			if (!this.taskName) {
@@ -65,36 +60,22 @@ export default {
 			} else {
 				this.endPoint = moment();
 				this.timeEnd = this.endPoint.format('YYYY-MM-DD HH:mm:ss');
-				// const milliseconds = this.calculateTimeSpent(
-				// 	this.timeStart,
-				// 	this.timeEnd
-				// );
 
 				this.data = {
-                    tableContent: {
-                        start_time: this.timeStart,
-                        end_time: this.timeEnd,
-                        task_name: this.taskName,
-                    }
+					tableContent: {
+						start_time: this.timeStart,
+						end_time: this.timeEnd,
+						task_name: this.taskName,
+					},
 				};
-				this.updateIsStartClicked({is_start: this.isStartClicked, start_time: null});
+				this.updateIsStartClicked({ is_start: this.isStartClicked, start_time: null });
 				eventBus.$emit('stopWasClicked', this.data);
 				this.difference = 0;
-				this.tableContent = [];
 				this.taskName = '';
 			}
 		},
-		// calculateTimeSpent(start, end) {
-		// 	const difference = moment(end, 'HH:mm:ss').diff(moment(start, 'HH:mm:ss'));
-		// 	this.timeSpent = moment('000000', 'HH:mm:ss')
-		// 		.milliseconds(difference)
-		// 		.format('HH:mm:ss');
-		// 	return difference;
-		// },
 		formatTime() {
-			const milliseconds = moment(moment(), 'HH:mm:ss').diff(
-				moment(this.timeStart, 'YYYY-MM-DD HH:mm:ss')
-			);
+			const milliseconds = moment(moment(), 'HH:mm:ss').diff(moment(this.timeStart, 'YYYY-MM-DD HH:mm:ss'));
 			this.difference = moment.duration(milliseconds);
 		},
 		async updateIsStartClicked(data) {

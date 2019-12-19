@@ -25,9 +25,6 @@
 						<router-link class="nav-link" to="/register">Register</router-link>
 					</li>
 				</template>
-                <li>
-                    <button class="btn btn-primary" @click="show">CLICK</button>
-                </li>
 			</ul>
 
 			<ul class="navbar-nav ml-auto" v-if="isActive">
@@ -40,27 +37,13 @@
 </template>
 
 <script>
-    import { store } from '../../store/store';
-    import api from '../../api';
 
 export default {
-	data() {
-		return {};
-	},
 	methods: {
 		async onSubmit() {
 		    await this.$store.dispatch('logout');
 
-		    // await this.$store.dispatch('checkLogged');
-
 		    this.$router.push('/login');
-        },
-        async show() {
-		    // console.log(store.getters.isLogged);
-            // console.log(store.getters.currentUser);
-            const { data } = await api.index('/auth/total_spent');
-
-            console.log(data);
         }
 	},
 	computed: {

@@ -14,7 +14,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<template v-if="tableContent">
+					<template v-if="tableContent.length">
 						<tr v-for="(content, index) in tableContent" :key="index">
 							<td>{{ index + 1 }}</td>
 							<td>{{ content.task_name }}</td>
@@ -47,9 +47,9 @@
 			</table>
 		</template>
 
-        <template v-else>
-            <spinner />
-        </template>
+		<template v-else>
+			<spinner />
+		</template>
 	</div>
 </template>
 
@@ -70,7 +70,7 @@ export default {
 	data() {
 		return {
 			tableHeaders: TABLE_HEADERS,
-			tableContent: null,
+			tableContent: [],
 			timeSpent: null,
 			milliseconds: 0,
 			showModal: false,
@@ -80,10 +80,11 @@ export default {
 	},
 	computed: {},
 	methods: {
-		deleteTask() {
+		async deleteTask() {
 			eventBus.$emit('deleteTaskWasClicked');
-			this.tableContent = this.tableContent.filter((element, index) => index !== this.indexOfDeletedItem);
-			this.updateTableContent(this.tableContent);
+			await this.deleteTableContent(this.tableContent[this.indexOfDeletedItem].id);
+            await this.getTableContent();
+            await this.getTimeSpent();
 			this.indexOfDeletedItem = null;
 			this.showModal = false;
 		},
@@ -102,13 +103,16 @@ export default {
 		navigateToTaskCard(index) {
 			this.$router.push({ name: 'TaskInfo', params: { id: index + 1 } });
 		},
+		async deleteTableContent(data) {
+			await api.destroy('/auth/tasks', data);
+		},
 		async updateTableContent(data) {
 			await api.store('/auth/tasks', data);
 		},
 		async getTableContent() {
 			const { data } = await api.index('/auth/tasks');
 			if (!data) {
-				this.tableContent = 0;
+				this.tableContent = [];
 			} else {
 				this.tableContent = data;
 			}

@@ -2,7 +2,7 @@ import TaskInfo from './components/TaskInfo/TaskInfo';
 import Home from './components/Home/Home';
 import Login from './components/Auth/Login/Login';
 import Register from './components/Auth/Register/Register';
-import NotFound from './components/NotFound/NotFound';
+import NotFound from './components/Error/NotFound/NotFound';
 import { store } from './store/store';
 import {ROLES} from "./utils/constants";
 

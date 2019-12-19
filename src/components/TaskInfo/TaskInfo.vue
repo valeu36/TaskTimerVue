@@ -4,7 +4,7 @@
 			<div class="h-100 row align-items-center justify-content-center">
 				<template v-if="!isLoading">
 					<template v-if="isPageExist">
-						<div class="card" style="width: 24rem; min-height: 18rem">
+						<div class="card mt-3" style="width: 24rem; min-height: 18rem">
 							<div class="card-body">
 								<h5 class="card-title">{{ id }}</h5>
 								<p class="card-text d-flex justify-content-between">
@@ -23,7 +23,7 @@
 									<b>Task spent:</b> <span>{{ taskSpent }}</span>
 								</p>
 								<hr />
-								<button class="btn-light border-0 rounded" @click="navigateToHome">
+								<button class="btn btn-light border-0 rounded" @click="navigateToHome">
 									Home
 								</button>
 							</div>
@@ -31,7 +31,6 @@
 					</template>
 
 					<template v-else>
-<!--						<error />-->
                         <not-found />
 					</template>
 				</template>
@@ -46,15 +45,13 @@
 
 <script>
 import api from '../../api/index';
-// import Error from '../Error/Error';
-import NotFound from '../NotFound/NotFound';
+import NotFound from '../Error/NotFound/NotFound';
 import Spinner from '../Spinner/Spinner';
 import TopBar from '../Layouts/TopBar';
 
 export default {
 	props: ['id'],
 	components: {
-		// Error,
         NotFound,
 		Spinner,
 		TopBar,
@@ -71,17 +68,17 @@ export default {
 	},
 	methods: {
 		async getTableContent() {
-			const { data } = await api.getData('/data.json');
+            const { data } = await api.index('/auth/tasks');
 			if (data.length < this.id) {
 				this.isPageExist = false;
 				return;
 			}
 			this.isPageExist = true;
-			const [taskName, taskStart, taskEnd, taskSpent] = data[this.id - 1];
-			this.taskName = taskName;
-			this.taskStart = taskStart;
-			this.taskEnd = taskEnd;
-			this.taskSpent = taskSpent;
+			const {task_name, start_time, end_time, time_spent} = data[this.id - 1];
+			this.taskName = task_name;
+			this.taskStart = start_time;
+			this.taskEnd = end_time;
+			this.taskSpent = time_spent;
 		},
 		navigateToHome() {
 			this.$router.push({ name: 'Home' });

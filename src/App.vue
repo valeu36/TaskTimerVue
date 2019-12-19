@@ -3,15 +3,14 @@
 		<top-bar :isLogged="isLogged"/>
 		<router-view />
 	</div>
-	<!--v-if="isLoading">-->
 </template>
 
 <script>
-import api from './api/index';
 import TopBar from './components/Layouts/TopBar';
+import {store} from './store/store';
+
 import Bootstrap from 'bootstrap/scss/bootstrap.scss';
 import BootstrapJQuery from 'bootstrap/dist/js/bootstrap.min';
-import {store} from './store/store';
 
 export default {
     data() {
@@ -23,11 +22,6 @@ export default {
 	components: { TopBar },
 	comments: {
 		TopBar,
-	},
-	mounted() {
-		this.$store.dispatch('checkLogged');
-        // console.log(this.$store.getters.token);
-        // console.log(this.$store.getters.isLogged);
 	},
 };
 </script>
