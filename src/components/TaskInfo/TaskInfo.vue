@@ -1,41 +1,45 @@
 <template>
-	<div class="h-100 row align-items-center justify-content-center">
-		<template v-if="!isLoading">
-			<template v-if="isPageExist">
-				<div class="card" style="width: 24rem; min-height: 18rem">
-					<div class="card-body">
-						<h5 class="card-title">{{ id }}</h5>
-						<p class="card-text d-flex justify-content-between">
-							<b>Task name:</b> <span>{{ taskName }}</span>
-						</p>
-						<hr />
-						<p class="card-text d-flex justify-content-between">
-							<b>Task start:</b> <span>{{ taskStart }}</span>
-						</p>
-						<hr />
-						<p class="card-text d-flex justify-content-between">
-							<b>Task end:</b> <span>{{ taskEnd }}</span>
-						</p>
-						<hr />
-						<p class="card-text d-flex justify-content-between">
-							<b>Task spent:</b> <span>{{ taskSpent }}</span>
-						</p>
-						<hr />
-						<button class="btn-light border-0 rounded" @click="navigateToHome">
-							Home
-						</button>
-					</div>
-				</div>
-			</template>
+	<div>
+		<div class="container">
+			<div class="h-100 row align-items-center justify-content-center">
+				<template v-if="!isLoading">
+					<template v-if="isPageExist">
+						<div class="card" style="width: 24rem; min-height: 18rem">
+							<div class="card-body">
+								<h5 class="card-title">{{ id }}</h5>
+								<p class="card-text d-flex justify-content-between">
+									<b>Task name:</b> <span>{{ taskName }}</span>
+								</p>
+								<hr />
+								<p class="card-text d-flex justify-content-between">
+									<b>Task start:</b> <span>{{ taskStart }}</span>
+								</p>
+								<hr />
+								<p class="card-text d-flex justify-content-between">
+									<b>Task end:</b> <span>{{ taskEnd }}</span>
+								</p>
+								<hr />
+								<p class="card-text d-flex justify-content-between">
+									<b>Task spent:</b> <span>{{ taskSpent }}</span>
+								</p>
+								<hr />
+								<button class="btn-light border-0 rounded" @click="navigateToHome">
+									Home
+								</button>
+							</div>
+						</div>
+					</template>
 
-			<template v-else>
-				<error />
-			</template>
-		</template>
+					<template v-else>
+						<error />
+					</template>
+				</template>
 
-		<template v-else>
-			<spinner />
-		</template>
+				<template v-else>
+					<spinner />
+				</template>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -44,12 +48,14 @@ import api from '../../api/index';
 
 import Error from '../Error/Error';
 import Spinner from '../Spinner/Spinner';
+import TopBar from '../Layouts/TopBar';
 
 export default {
 	props: ['id'],
 	components: {
 		Error,
 		Spinner,
+		TopBar,
 	},
 	data() {
 		return {

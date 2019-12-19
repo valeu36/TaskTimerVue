@@ -53,9 +53,10 @@ export default {
 		},
 		start() {
 			this.startPoint = moment();
-			this.timeStart = this.startPoint.format('HH:mm:ss');
+			this.timeStart = this.startPoint.format('YYYY-MM-DD HH:mm:ss');
 			this.formatTime();
-			this.updateIsStartClicked({user_id: 1, is_start: this.isStartClicked});
+			this.updateIsStartClicked({
+                is_start: this.isStartClicked, start_time: this.timeStart});
 		},
 		stop() {
 			if (!this.taskName) {
@@ -63,7 +64,7 @@ export default {
 				this.isStartClicked = true;
 			} else {
 				this.endPoint = moment();
-				this.timeEnd = this.endPoint.format('HH:mm:ss');
+				this.timeEnd = this.endPoint.format('YYYY-MM-DD HH:mm:ss');
 				const milliseconds = this.calculateTimeSpent(
 					this.timeStart,
 					this.timeEnd
@@ -75,10 +76,15 @@ export default {
 					this.timeSpent
 				);
 				this.data = {
-					tableContent: this.tableContent,
+					// tableContent: this.tableContent,
+                    tableContent: {
+                        start_time: this.timeStart,
+                        end_time: this.timeEnd,
+                        task_name: this.taskName,
+                    },
 					milliseconds: milliseconds,
 				};
-				this.updateIsStartClicked([this.isStartClicked, null]);
+				this.updateIsStartClicked({is_start: this.isStartClicked, start_time: null});
 				eventBus.$emit('stopWasClicked', this.data);
 				this.difference = 0;
 				this.tableContent = [];
@@ -94,20 +100,17 @@ export default {
 		},
 		formatTime() {
 			const milliseconds = moment(moment(), 'HH:mm:ss').diff(
-				moment(this.timeStart, 'HH:mm:ss')
+				moment(this.timeStart, 'YYYY-MM-DD HH:mm:ss')
 			);
 			this.difference = moment.duration(milliseconds);
 		},
 		async updateIsStartClicked(data) {
-			await api.store('/timer_status', data);
+			await api.store('/auth/timer_status', data);
 		},
 		async getIsStartClicked() {
-			console.log('ok');
-			const { data } = await api.index('/timer_status');
-			console.log(data);
-			console.log('okay');
-			this.isStartClicked = data[0];
-			this.timeStart = data[1];
+			const { data } = await api.index('/auth/timer_status');
+			this.isStartClicked = !!data.is_start;
+			this.timeStart = data.start_time;
 			this.formatTime();
 		},
 	},

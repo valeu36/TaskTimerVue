@@ -18,8 +18,36 @@ const api = axios.create({
   // withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    // 'Authorization': 'Bearer ' + localStorage.getItem('token')
   }
 });
+
+axios.interceptors.request.use(
+  config => {
+      const token = localStorage.getItem('token');
+      if (token) {
+          config.headers['Authorization'] = 'Bearer ' + token;
+      }
+      // config.headers['Content-Type'] = 'application/json';
+      return config;
+  },
+  error => {
+      Promise.reject(error)
+  });
+
+// created: function () {
+//     axios.interceptors.response.use(undefined, function (err) {
+//         return new Promise(function (resolve, reject) {
+//             if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+//                 // if you ever get an unauthorized, logout the user
+//                 this.$store.dispatch(AUTH_LOGOUT)
+//                 // you can also redirect to /login if needed !
+//             }
+//             throw err;
+//         });
+//     });
+// }
 
 const get = async (resource, id = null) => await api.get(`${resource}/${id}`);
 const post = async (resource, data) => await api.post(resource, data);

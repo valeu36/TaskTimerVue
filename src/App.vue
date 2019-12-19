@@ -1,46 +1,34 @@
 <template>
-	<router-view /> <!--v-if="isLoading">-->
+	<div class="container">
+		<top-bar :isLogged="isLogged"/>
+		<router-view />
+	</div>
+	<!--v-if="isLoading">-->
 </template>
 
 <script>
-// import api from './api/index';
+import api from './api/index';
+import TopBar from './components/Layouts/TopBar';
+import Bootstrap from 'bootstrap/scss/bootstrap.scss';
+import BootstrapJQuery from 'bootstrap/dist/js/bootstrap.min';
+import {store} from './store/store';
 
 export default {
+    data() {
+      return {
+          isLogged: store.getters.isLogged
+      }
+    },
 	name: 'app',
-	// data() {
-	// 	return {
-	// 		refCount: 0,
-	// 		isLoading: false,
-	// 	};
-	// },
-	// created() {
-	// 	api.interceptors.request.use((config) => {
-  //     this.setLoading(true);
-  //     return config;
-  //   }, (error) => {
-  //     this.setLoading(false);
-  //     return Promise.reject(error);
-  //   });
-  //
-  //   api.interceptors.response.use((response) => {
-  //     this.setLoading(false);
-  //     return response;
-  //   }, (error) => {
-  //     this.setLoading(false);
-  //     return Promise.reject(error);
-  //   });
-	// },
-  // methods: {
-	// 	setLoading(isLoading) {
-  //     if (isLoading) {
-  //       this.refCount++;
-  //       this.isLoading = true;
-  //     } else if (this.refCount > 0) {
-  //       this.refCount--;
-  //       this.isLoading = (this.refCount > 0);
-  //     }
-  //   }
-  // }
+	components: { TopBar },
+	comments: {
+		TopBar,
+	},
+	mounted() {
+		this.$store.dispatch('checkLogged');
+        // console.log(this.$store.getters.token);
+        // console.log(this.$store.getters.isLogged);
+	},
 };
 </script>
 

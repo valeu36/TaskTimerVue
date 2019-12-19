@@ -16,13 +16,20 @@
 					>
 						{{ header }}
 					</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
 				</tr>
 			</thead>
 			<tbody>
-				<template v-if="tableContent.length">
+				<template v-if="tableContent">
 					<tr class v-for="(content, index) in tableContent" :key="index">
-						<td>{{ index + 1 }}</td>
-						<td v-for="(cell, idx) in content" :key="idx">{{ cell }}</td>
+                        <td>{{ content.id}}</td>
+                        <td>{{ content.task_name}}</td>
+                        <td>{{ content.start_time}}</td>
+                        <td>{{ content.end_time}}</td>
+                        <td></td>
+<!--						<td v-for="(cell, idx) in content" :key="idx">{{ cell }}</td>-->
 						<td>
 							<button
 								type="button"
@@ -85,7 +92,8 @@ export default {
 	data() {
 		return {
 			tableHeaders: TABLE_HEADERS,
-			tableContent: [],
+			// tableContent: [],
+            tableContent: null,
 			timeSpentArray: [],
 			timeSpent: '',
 			milliseconds: 0,
@@ -106,7 +114,7 @@ export default {
 			);
 			this.updateTime(this.timeSpentArray, this.millisecond);
 			this.updateTableContent(this.tableContent);
-			this.updateTimeSpentArray(this.timeSpentArray);
+			// this.updateTimeSpentArray(this.timeSpentArray);
 			this.indexOfDeletedItem = null;
 			this.showModal = false;
 		},
@@ -131,10 +139,10 @@ export default {
 		onStopWasClicked() {
 			eventBus.$on('stopWasClicked', (taskInfo) => {
 				const { tableContent, milliseconds } = taskInfo;
-				this.tableContent.push(tableContent);
+				this.tableContent = tableContent;
 				this.timeSpentArray.push(milliseconds);
 				this.updateTableContent(this.tableContent);
-				this.updateTimeSpentArray(this.timeSpentArray);
+				// this.updateTimeSpentArray(this.timeSpentArray);
 				this.updateTime(this.timeSpentArray, this.millisecond);
 			});
 		},
@@ -142,15 +150,15 @@ export default {
 			this.$router.push({ name: 'TaskInfo', params: { id: index + 1 } });
 		},
 		async updateTableContent(data) {
-			await api.setData('/data.json', data);
+			await api.store('/auth/tasks', data);
 		},
-		async updateTimeSpentArray(data) {
-			await api.setData('/timeSpentArray.json', data);
-		},
+		// async updateTimeSpentArray(data) {
+		// 	await api.setData('/timeSpentArray.json', data);
+		// },
 		async getTableContent() {
-			const { data } = await api.getData('/data.json');
+			const { data } = await api.index('/auth/tasks');
 			if (!data) {
-				this.tableContent = [];
+				this.tableContent = null;
       } else {
 				this.tableContent = data;
       }
@@ -165,13 +173,14 @@ export default {
 		}
 	},
 	async mounted() {
-		console.log('mounted');
 		this.isLoading = true;
 		await this.getTableContent();
-		await this.getTimeSpentArray();
+		// await this.getTimeSpentArray();
 		this.onStopWasClicked();
 		this.updateTime(this.timeSpentArray, this.millisecond);
 		this.isLoading = false;
+		// console.log(this.$store.getters.isLogged);
+        // console.log(this.$store.getters.token);
 	},
 };
 </script>
