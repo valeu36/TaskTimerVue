@@ -41,6 +41,7 @@
 
 <script>
     import { store } from '../../store/store';
+    import api from '../../api';
 
 export default {
 	data() {
@@ -54,9 +55,12 @@ export default {
 
 		    this.$router.push('/login');
         },
-        show() {
-		    console.log(store.getters.isLogged);
-            console.log(store.getters.currentUser);
+        async show() {
+		    // console.log(store.getters.isLogged);
+            // console.log(store.getters.currentUser);
+            const { data } = await api.index('/auth/total_spent');
+
+            console.log(data);
         }
 	},
 	computed: {

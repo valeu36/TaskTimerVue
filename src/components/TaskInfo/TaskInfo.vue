@@ -31,7 +31,8 @@
 					</template>
 
 					<template v-else>
-						<error />
+<!--						<error />-->
+                        <not-found />
 					</template>
 				</template>
 
@@ -45,15 +46,16 @@
 
 <script>
 import api from '../../api/index';
-
-import Error from '../Error/Error';
+// import Error from '../Error/Error';
+import NotFound from '../NotFound/NotFound';
 import Spinner from '../Spinner/Spinner';
 import TopBar from '../Layouts/TopBar';
 
 export default {
 	props: ['id'],
 	components: {
-		Error,
+		// Error,
+        NotFound,
 		Spinner,
 		TopBar,
 	},

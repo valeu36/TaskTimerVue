@@ -65,24 +65,17 @@ export default {
 			} else {
 				this.endPoint = moment();
 				this.timeEnd = this.endPoint.format('YYYY-MM-DD HH:mm:ss');
-				const milliseconds = this.calculateTimeSpent(
-					this.timeStart,
-					this.timeEnd
-				);
-				this.tableContent.push(
-					this.taskName,
-					this.timeStart,
-					this.timeEnd,
-					this.timeSpent
-				);
+				// const milliseconds = this.calculateTimeSpent(
+				// 	this.timeStart,
+				// 	this.timeEnd
+				// );
+
 				this.data = {
-					// tableContent: this.tableContent,
                     tableContent: {
                         start_time: this.timeStart,
                         end_time: this.timeEnd,
                         task_name: this.taskName,
-                    },
-					milliseconds: milliseconds,
+                    }
 				};
 				this.updateIsStartClicked({is_start: this.isStartClicked, start_time: null});
 				eventBus.$emit('stopWasClicked', this.data);
@@ -91,13 +84,13 @@ export default {
 				this.taskName = '';
 			}
 		},
-		calculateTimeSpent(start, end) {
-			const difference = moment(end, 'HH:mm:ss').diff(moment(start, 'HH:mm:ss'));
-			this.timeSpent = moment('000000', 'HH:mm:ss')
-				.milliseconds(difference)
-				.format('HH:mm:ss');
-			return difference;
-		},
+		// calculateTimeSpent(start, end) {
+		// 	const difference = moment(end, 'HH:mm:ss').diff(moment(start, 'HH:mm:ss'));
+		// 	this.timeSpent = moment('000000', 'HH:mm:ss')
+		// 		.milliseconds(difference)
+		// 		.format('HH:mm:ss');
+		// 	return difference;
+		// },
 		formatTime() {
 			const milliseconds = moment(moment(), 'HH:mm:ss').diff(
 				moment(this.timeStart, 'YYYY-MM-DD HH:mm:ss')
