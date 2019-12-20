@@ -36,10 +36,9 @@ export default {
 					: '00') +
 				':' +
 				(this.seconds > 9 ? this.seconds : '0' + this.seconds);
-			this.timer();
 		},
 		timer() {
-			this.interval = setTimeout(this.add, 1000);
+			this.interval = setInterval(this.add, 1000);
 		},
 		setInitialState() {
 			clearTimeout(this.interval);
@@ -47,7 +46,7 @@ export default {
 			this.seconds = 0;
 			this.minutes = 0;
 			this.hours = 0;
-		},
+		}
 	},
 	watch: {
 		startIsClicked() {
