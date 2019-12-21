@@ -60,6 +60,7 @@
 				:next-class="'page-item-next'"
 				:prev-link-class="'page-item-link-prev'"
 				:next-link-class="'page-item-link-next'"
+                v-if="data.total > 10"
 			>
 			</paginate>
 		</template>
