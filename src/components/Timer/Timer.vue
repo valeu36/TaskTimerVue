@@ -44,7 +44,8 @@ export default {
 			this.isStartClicked ? this.start() : this.stop();
 		},
 		start() {
-			this.startPoint = moment();
+			this.startPoint = moment('YYYY-MM-DD HH:mm:ss');
+			console.log(this.startPoint);
 			this.timeStart = this.startPoint.format('YYYY-MM-DD HH:mm:ss');
 			this.formatTime();
 			// TODO try to make formatTime() functionality on back-end
