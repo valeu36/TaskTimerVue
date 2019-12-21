@@ -3,6 +3,8 @@ import App from './App.vue';
 import VueRouter from 'vue-router';
 import {routes} from './router';
 import { store } from './store/store';
+import Paginate from 'vuejs-paginate';
+
 
 export const eventBus = new Vue();
 
@@ -11,6 +13,8 @@ const router = new VueRouter({
     mode: 'history',
     saveScrollPosition: false,
 });
+
+Vue.component('paginate', Paginate);
 
 Vue.use(VueRouter);
 

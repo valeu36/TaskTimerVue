@@ -6,34 +6,6 @@ import NotFound from './components/Error/NotFound/NotFound';
 import { store } from './store/store';
 import {ROLES} from "./utils/constants";
 
-// const ifNotAuthenticated = (to, from, next) => {
-//     if (!store.getters.isLogged) {
-//         next('/login');
-//         return;
-//     }
-//     next();
-// };
-//
-// const ifAuthenticated = (to, from, next) => {
-//     if (store.getters.isLogged) {
-//         next('/');
-//         return;
-//     }
-//     next();
-// };
-
-// const ifAuth = (to, from, next) => {
-//   if (store.getters.isLogged) {
-//       next('/');
-//       return
-//   }
-//   else if (!store.getters.isLogged) {
-//       next('/register');
-//       return;
-//   }
-//   next();
-// };
-
 const ifAuth = async (to, from, next) => {
     if (store.getters.isLogged) {
         const accessIsAllowed = to.meta.accessIsAllowed;
@@ -58,7 +30,7 @@ const ifNotAuth = (to, from, next) => {
     if (!store.getters.isLogged) {
         next();
     } else {
-        next('/');
+        next('/home');
     }
 };
 
@@ -81,6 +53,10 @@ const allRoles = () => Object.values(ROLES.ID);
 export const routes = [
     {
         path: '/',
+        redirect: 'home'
+    },
+    {
+        path: '/home',
         name: 'Home',
         component: Home,
         beforeEnter: ifAuth,
@@ -116,3 +92,4 @@ export const routes = [
         component: NotFound,
     },
 ];
+

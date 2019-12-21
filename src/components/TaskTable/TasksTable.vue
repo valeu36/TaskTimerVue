@@ -33,7 +33,7 @@
 							</td>
 						</tr>
 						<tr>
-							<th colspan="4">Total time spent:</th>
+							<th colspan="4">All tasks time:</th>
 							<td colspan="4" class="font-weight-bold">{{ timeSpent }}</td>
 						</tr>
 					</template>
@@ -45,6 +45,23 @@
 					</template>
 				</tbody>
 			</table>
+
+			<paginate
+                :page-count="data.total / 10"
+				:page-range="3"
+				:margin-pages="3"
+				:click-handler="getTableContent"
+				:prev-text="'Prev'"
+				:next-text="'Next'"
+				:container-class="'pagination'"
+				:page-class="'page-item'"
+				:active-class="'page-item-active'"
+				:prev-class="'page-item-prev'"
+				:next-class="'page-item-next'"
+				:prev-link-class="'page-item-link-prev'"
+				:next-link-class="'page-item-link-next'"
+			>
+			</paginate>
 		</template>
 
 		<template v-else>
@@ -76,6 +93,7 @@ export default {
 			showModal: false,
 			indexOfDeletedItem: null,
 			isLoading: false,
+            data: null
 		};
 	},
 	computed: {},
@@ -83,8 +101,8 @@ export default {
 		async deleteTask() {
 			eventBus.$emit('deleteTaskWasClicked');
 			await this.deleteTableContent(this.tableContent[this.indexOfDeletedItem].id);
-            await this.getTableContent();
-            await this.getTimeSpent();
+			await this.getTableContent();
+			await this.getTimeSpent();
 			this.indexOfDeletedItem = null;
 			this.showModal = false;
 		},
@@ -109,12 +127,14 @@ export default {
 		async updateTableContent(data) {
 			await api.store('/auth/tasks', data);
 		},
-		async getTableContent() {
-			const { data } = await api.index('/auth/tasks');
-			if (!data) {
+		async getTableContent(page) {
+            const { data } = await api.index(`/auth/tasks?page=${page}`);
+			console.log(data);
+			this.data = data;
+			if (!data.data) {
 				this.tableContent = [];
 			} else {
-				this.tableContent = data;
+				this.tableContent = data.data;
 			}
 		},
 		async getTimeSpent() {
@@ -136,9 +156,65 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 td,
 th {
 	vertical-align: middle;
+}
+.pagination {
+	display: flex;
+	justify-content: center;
+}
+.page-item {
+	color: black;
+	padding: 8px 16px;
+	text-decoration: none;
+	margin: 3px;
+	border: 1px solid #eee;
+	border-radius: 5px;
+}
+
+.page-item-active {
+	background-color: #343a40;
+	color: white;
+	border-radius: 5px;
+}
+
+.page-item-prev {
+	color: black;
+	padding: 8px 16px;
+	text-decoration: none;
+	margin: 3px;
+	border: 1px solid #eee;
+	border-radius: 5px;
+}
+
+.page-item-next {
+	color: black;
+	padding: 8px 16px;
+	text-decoration: none;
+	margin: 3px;
+	border: 1px solid #eee;
+	border-radius: 5px;
+}
+
+.page-item:hover {
+	background-color: #ddd;
+	border-radius: 5px;
+}
+
+.page-item-active:hover {
+	background-color: #636a70;
+	border-radius: 5px;
+}
+
+.page-item-prev:hover {
+	background-color: #ddd;
+	border-radius: 5px;
+}
+
+.page-item-next:hover {
+	background-color: #ddd;
+	border-radius: 5px;
 }
 </style>

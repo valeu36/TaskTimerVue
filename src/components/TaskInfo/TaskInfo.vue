@@ -69,12 +69,12 @@ export default {
 	methods: {
 		async getTableContent() {
             const { data } = await api.index('/auth/tasks');
-			if (data.length < this.id) {
+			if (data.data.length < this.id) {
 				this.isPageExist = false;
 				return;
 			}
 			this.isPageExist = true;
-			const {task_name, start_time, end_time, time_spent} = data[this.id - 1];
+			const {task_name, start_time, end_time, time_spent} = data.data[this.id - 1];
 			this.taskName = task_name;
 			this.taskStart = start_time;
 			this.taskEnd = end_time;
