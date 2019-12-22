@@ -47,20 +47,20 @@
 			</table>
 
 			<paginate
-                :page-count="data.total / 10"
+                v-model="page"
+                :page-count="Math.ceil(data.total / 10)"
 				:page-range="3"
 				:margin-pages="3"
 				:click-handler="getTableContent"
 				:prev-text="'Prev'"
 				:next-text="'Next'"
 				:container-class="'pagination'"
-				:page-class="'page-item'"
-				:active-class="'page-item-active'"
-				:prev-class="'page-item-prev'"
-				:next-class="'page-item-next'"
-				:prev-link-class="'page-item-link-prev'"
-				:next-link-class="'page-item-link-next'"
-                v-if="data.total > 10"
+				:page-link-class="'page-item'"
+				:prev-link-class="'page-item-prev'"
+				:next-link-class="'page-item-next'"
+                :hide-prev-next="true"
+                :first-last-button="true"
+                :no-li-surround="true"
 			>
 			</paginate>
 		</template>
@@ -94,7 +94,8 @@ export default {
 			showModal: false,
 			indexOfDeletedItem: null,
 			isLoading: false,
-            data: null
+            data: null,
+            page: 0
 		};
 	},
 	computed: {},
@@ -102,7 +103,7 @@ export default {
 		async deleteTask() {
 			eventBus.$emit('deleteTaskWasClicked');
 			await this.deleteTableContent(this.tableContent[this.indexOfDeletedItem].id);
-			await this.getTableContent();
+			await this.getTableContent(this.getNumberOfPages(this.data.total - 1, 10));
 			await this.getTimeSpent();
 			this.indexOfDeletedItem = null;
 			this.showModal = false;
@@ -115,7 +116,7 @@ export default {
 			eventBus.$on('stopWasClicked', async (taskInfo) => {
 				const { tableContent } = taskInfo;
 				await this.updateTableContent(tableContent);
-				await this.getTableContent();
+				await this.getTableContent(this.getNumberOfPages(this.data.total + 1, 10));
 				await this.getTimeSpent();
 			});
 		},
@@ -126,16 +127,17 @@ export default {
 			await api.destroy('/auth/tasks', data);
 		},
 		async updateTableContent(data) {
+		    console.log('updated');
 			await api.store('/auth/tasks', data);
 		},
 		async getTableContent(page) {
             const { data } = await api.index(`/auth/tasks?page=${page}`);
-			console.log(data);
 			this.data = data;
 			if (!data.data) {
 				this.tableContent = [];
 			} else {
 				this.tableContent = data.data;
+                this.page = page;
 			}
 		},
 		async getTimeSpent() {
@@ -146,14 +148,20 @@ export default {
 				this.timeSpent = data;
 			}
 		},
+        getNumberOfPages(tasksNumber, tasksPerPage) {
+            return Math.ceil(tasksNumber / tasksPerPage);
+        }
 	},
-	async mounted() {
+	async created() {
 		this.isLoading = true;
 		await this.getTableContent();
 		await this.getTimeSpent();
 		this.onStopWasClicked();
 		this.isLoading = false;
 	},
+    beforeDestroy() {
+        eventBus.$off('stopWasClicked');
+    },
 };
 </script>
 
@@ -175,7 +183,7 @@ th {
 	border-radius: 5px;
 }
 
-.page-item-active {
+.page-item.active {
 	background-color: #343a40;
 	color: white;
 	border-radius: 5px;
@@ -204,7 +212,7 @@ th {
 	border-radius: 5px;
 }
 
-.page-item-active:hover {
+.page-item.active:hover {
 	background-color: #636a70;
 	border-radius: 5px;
 }

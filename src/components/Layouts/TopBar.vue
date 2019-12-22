@@ -1,5 +1,5 @@
 <template>
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded mt-1">
 		<a class="navbar-brand">TaskTimer</a>
 		<button
 			class="navbar-toggler"
@@ -15,7 +15,7 @@
 		<div class="collapse navbar-collapse" id="navbarNav">
 			<ul class="navbar-nav">
 				<li class="nav-item" v-if="isActive">
-					<router-link class="nav-link" to="/">Home</router-link>
+					<router-link class="nav-link" to="/home">Home</router-link>
 				</li>
 				<template v-if="!isActive">
 					<li class="nav-item">

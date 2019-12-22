@@ -4,7 +4,7 @@
 
 		<div class="text-center">
 			<input class="input-task" type="text" placeholder="Task name" v-model="taskName" @keyup.enter="toggleTask" />
-			<timer :startIsClicked="isStartClicked" :difference="difference"></timer>
+			<clock :startIsClicked="isStartClicked" :difference="difference"></clock>
 			<button type="button" class="btn btn-light m-2" @click="toggleTask">
 				{{ isStartClicked ? 'STOP' : 'START' }}
 			</button>
@@ -18,7 +18,7 @@ import moment from 'moment';
 import api from '../../api/index';
 
 import InputModal from '../Modals/InputModal/InputModal';
-import Timer from './Clock/Clock';
+import Clock from './Clock/Clock';
 
 export default {
 	data() {
@@ -27,15 +27,13 @@ export default {
 			taskName: '',
 			timeStart: '',
 			timeEnd: '',
-			startPoint: 0,
-			endPoint: 0,
 			showModal: false,
 			difference: 0,
 			data: {},
 		};
 	},
 	components: {
-		Timer,
+        Clock,
 		InputModal,
 	},
 	methods: {
@@ -44,8 +42,7 @@ export default {
 			this.isStartClicked ? this.start() : this.stop();
 		},
 		start() {
-			this.startPoint = moment();
-			this.timeStart = this.startPoint.format('YYYY-MM-DD HH:mm:ss');
+			this.timeStart = moment().format('YYYY-MM-DD HH:mm:ss');
 			this.formatTime();
 			// TODO try to make formatTime() functionality on back-end
 			this.updateIsStartClicked({
@@ -58,8 +55,7 @@ export default {
 				this.showModal = true;
 				this.isStartClicked = true;
 			} else {
-				this.endPoint = moment();
-				this.timeEnd = this.endPoint.format('YYYY-MM-DD HH:mm:ss');
+				this.timeEnd = moment().format('YYYY-MM-DD HH:mm:ss');
 
 				this.data = {
 					tableContent: {
@@ -88,7 +84,7 @@ export default {
 			this.formatTime();
 		},
 	},
-	mounted() {
+	created() {
 		this.getIsStartClicked();
 	},
 };
