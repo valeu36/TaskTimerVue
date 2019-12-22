@@ -68,7 +68,6 @@ export default {
 	},
 	methods: {
 		async onSubmit() {
-			console.log(this.email + ' ' + this.password);
 			await this.$store.dispatch('register', {
 				email: this.email,
 				name: this.name,
@@ -78,6 +77,7 @@ export default {
 				password: this.password,
 				password_confirmation: this.confirmPassword,
 			});
+            await this.$router.push('/login');
 		},
 	},
 };

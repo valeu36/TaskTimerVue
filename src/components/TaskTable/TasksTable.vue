@@ -37,14 +37,14 @@
 							<td colspan="4" class="font-weight-bold">{{ timeSpent }}</td>
 						</tr>
 					</template>
-
-					<template v-else>
-						<tr class="font-weight-bold">
-							<td>Tasks Not Found</td>
-						</tr>
-					</template>
 				</tbody>
 			</table>
+
+            <template v-if="!tableContent.length">
+                <div class="font-weight-bold text-center">
+                    <span>Tasks Not Found</span>
+                </div>
+            </template>
 
 			<paginate
                 v-model="page"
@@ -61,6 +61,7 @@
                 :hide-prev-next="true"
                 :first-last-button="true"
                 :no-li-surround="true"
+                v-if="tableContent.length"
 			>
 			</paginate>
 		</template>

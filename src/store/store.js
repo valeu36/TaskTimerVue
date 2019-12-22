@@ -34,11 +34,8 @@ export const store = new Vuex.Store({
 		async login({ dispatch, commit }, payload) {
 			const json = await api.post('/auth/login', payload);
 
-			// api.defaults.headers['Authorization'] = `Bearer ${t}`;
-
 			if (json.status === 200) {
 				await commit('login', json.data.access_token);
-                // await dispatch('checkLogged');
                 await dispatch('getCurrentUser');
 				return json;
 			}
@@ -56,9 +53,9 @@ export const store = new Vuex.Store({
 		},
 
 		async register(state, payload) {
-			const json = await api.post('/auth/signup', payload);
+			const json = await api.post('/auth/register', payload);
 
-			if (json.status === 200) {
+			if (json.status === 201) {
 				return json;
 			}
 
@@ -71,7 +68,6 @@ export const store = new Vuex.Store({
 		    if (json.status === 200) {
 		        await commit('logout');
 		        await commit('currentUser', null);
-		        // await dispatch('checkLogged');
 		        return json;
             }
 

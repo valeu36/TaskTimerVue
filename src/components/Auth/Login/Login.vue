@@ -17,6 +17,10 @@
 				<label for="InputPassword">Password</label>
 				<input type="password" class="form-control" id="InputPassword" placeholder="Password" v-model="password" />
 			</div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="RememberMe" v-model="rememberMe">
+                <label class="form-check-label" for="RememberMe">Remember Me</label>
+            </div>
 			<button type="submit" class="btn btn-primary" @click.prevent="onSubmit">Submit</button>
 		</form>
 	</div>
@@ -30,6 +34,7 @@ export default {
 		return {
 			email: '',
 			password: '',
+            rememberMe: false
 		};
 	},
 	components: {
@@ -40,8 +45,9 @@ export default {
 			await this.$store.dispatch('login', {
 				email: this.email,
 				password: this.password,
+                remember_me: this.rememberMe
 			});
-			await this.$router.push('/');
+			await this.$router.push('/home');
 		},
 	}
 };
