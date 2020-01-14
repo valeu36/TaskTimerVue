@@ -16,7 +16,7 @@
 				<tbody>
 					<template v-if="tableContent.length">
 						<tr v-for="(content, index) in tableContent" :key="index">
-							<td>{{ index + 1 }}</td>
+							<td>{{ parseInt(page, 10) - 1 ? index + 1 + (parseInt(page, 10) - 1) * 10 : index + 1 }}</td>
 							<td>{{ content.task_name }}</td>
 							<td>{{ content.start_time }}</td>
 							<td>{{ content.end_time }}</td>
@@ -40,15 +40,15 @@
 				</tbody>
 			</table>
 
-            <template v-if="!tableContent.length">
-                <div class="font-weight-bold text-center">
-                    <span>Tasks Not Found</span>
-                </div>
-            </template>
+			<template v-if="!tableContent.length">
+				<div class="font-weight-bold text-center">
+					<span>Tasks Not Found</span>
+				</div>
+			</template>
 
 			<paginate
-                v-model="page"
-                :page-count="Math.ceil(data.total / 10)"
+				v-model="page"
+				:page-count="Math.ceil(data.total / 10)"
 				:page-range="3"
 				:margin-pages="3"
 				:click-handler="getTableContent"
@@ -58,10 +58,10 @@
 				:page-link-class="'page-item'"
 				:prev-link-class="'page-item-prev'"
 				:next-link-class="'page-item-next'"
-                :hide-prev-next="true"
-                :first-last-button="true"
-                :no-li-surround="true"
-                v-if="tableContent.length"
+				:hide-prev-next="true"
+				:first-last-button="true"
+				:no-li-surround="true"
+				v-if="tableContent.length"
 			>
 			</paginate>
 		</template>
@@ -95,11 +95,20 @@ export default {
 			showModal: false,
 			indexOfDeletedItem: null,
 			isLoading: false,
-            data: null,
-            page: 0
+			data: null,
+			// page: this.$store.getters.page
 		};
 	},
-	computed: {},
+	computed: {
+		page: {
+			get() {
+				return this.$store.getters.page;
+			},
+			set(value) {
+				this.$store.commit('setPage', value);
+			},
+		},
+	},
 	methods: {
 		async deleteTask() {
 			eventBus.$emit('deleteTaskWasClicked');
@@ -131,13 +140,13 @@ export default {
 			await api.store('/auth/tasks', data);
 		},
 		async getTableContent(page) {
-            const { data } = await api.index(`/auth/tasks?page=${page}`);
+			const { data } = await api.index(`/auth/tasks?page=${page}`);
 			this.data = data;
 			if (!data.data) {
 				this.tableContent = [];
 			} else {
 				this.tableContent = data.data;
-                this.page = page;
+				this.page = page;
 			}
 		},
 		async getTimeSpent() {
@@ -148,9 +157,9 @@ export default {
 				this.timeSpent = data;
 			}
 		},
-        getNumberOfPages(tasksNumber, tasksPerPage) {
-            return Math.ceil(tasksNumber / tasksPerPage);
-        }
+		getNumberOfPages(tasksNumber, tasksPerPage) {
+			return Math.ceil(tasksNumber / tasksPerPage);
+		},
 	},
 	async created() {
 		this.isLoading = true;
@@ -159,9 +168,9 @@ export default {
 		this.onStopWasClicked();
 		this.isLoading = false;
 	},
-    beforeDestroy() {
-        eventBus.$off('stopWasClicked');
-    },
+	beforeDestroy() {
+		eventBus.$off('stopWasClicked');
+	},
 };
 </script>
 

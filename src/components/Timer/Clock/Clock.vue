@@ -18,24 +18,14 @@ export default {
 	methods: {
 		add() {
 			this.seconds++;
-			if (this.seconds >= 60) {
-				this.seconds = 0;
-				this.minutes++;
-				if (this.minutes >= 60) {
-					this.minutes = 0;
-					this.hours++;
-				}
-			}
+
+            this.convertTime(this.seconds, this.minutes);
+            this.convertTime(this.minutes, this.hours);
+
 			this.$refs.counter.textContent =
-				(this.hours ? (this.hours > 9 ? this.hours : '0' + this.hours) : '00') +
-				':' +
-				(this.minutes
-					? this.minutes > 9
-						? this.minutes
-						: '0' + this.minutes
-					: '00') +
-				':' +
-				(this.seconds > 9 ? this.seconds : '0' + this.seconds);
+                this.toHtmlTimer(this.hours) +
+                this.toHtmlTimer(this.minutes) +
+                this.toHtmlTimer(this.seconds);
 		},
 		timer() {
 			this.interval = setInterval(this.add, 1000);
@@ -46,7 +36,18 @@ export default {
 			this.seconds = 0;
 			this.minutes = 0;
 			this.hours = 0;
-		}
+		},
+
+        convertTime(fromUnit, toUnit) {
+			if (fromUnit >= 60) {
+				fromUnit = 0;
+				toUnit++;
+            }
+        },
+
+        toHtmlTimer(unit) {
+			return  unit ? (unit > 9 ? unit : '0' + unit) : '00' + ':';
+        }
 	},
 	watch: {
 		startIsClicked() {

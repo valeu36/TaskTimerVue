@@ -1,11 +1,9 @@
 <template>
 	<div>
 		<div class="container">
-
 			<start-task />
 
 			<tasks-table />
-
 		</div>
 	</div>
 </template>
@@ -25,6 +23,4 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>

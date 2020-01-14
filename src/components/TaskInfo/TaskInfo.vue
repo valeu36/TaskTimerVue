@@ -6,7 +6,9 @@
 					<template v-if="isPageExist">
 						<div class="card mt-3" style="width: 24rem; min-height: 18rem">
 							<div class="card-body">
-								<h5 class="card-title">{{ id }}</h5>
+								<h5 class="card-title">
+									{{ this.$store.getters.page - 1 ? (this.$store.getters.page - 1) * 10 + id : id }}
+								</h5>
 								<p class="card-text d-flex justify-content-between">
 									<b>Task name:</b> <span>{{ taskName }}</span>
 								</p>
@@ -31,7 +33,7 @@
 					</template>
 
 					<template v-else>
-                        <not-found />
+						<not-found />
 					</template>
 				</template>
 
@@ -52,7 +54,7 @@ import TopBar from '../Layouts/TopBar';
 export default {
 	props: ['id'],
 	components: {
-        NotFound,
+		NotFound,
 		Spinner,
 		TopBar,
 	},
@@ -68,13 +70,13 @@ export default {
 	},
 	methods: {
 		async getTableContent() {
-            const { data } = await api.index('/auth/tasks');
+			const { data } = await api.index(`/auth/tasks?page=${this.$store.getters.page}`);
 			if (data.data.length < this.id) {
 				this.isPageExist = false;
 				return;
 			}
 			this.isPageExist = true;
-			const {task_name, start_time, end_time, time_spent} = data.data[this.id - 1];
+			const { task_name, start_time, end_time, time_spent } = data.data[this.id - 1];
 			this.taskName = task_name;
 			this.taskStart = start_time;
 			this.taskEnd = end_time;
