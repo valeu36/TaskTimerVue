@@ -11,6 +11,7 @@
 						<th></th>
 						<th></th>
 						<th></th>
+
 					</tr>
 				</thead>
 				<tbody>
@@ -31,6 +32,9 @@
 									DELETE
 								</button>
 							</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
 						</tr>
 						<tr>
 							<th colspan="4">All tasks time:</th>
