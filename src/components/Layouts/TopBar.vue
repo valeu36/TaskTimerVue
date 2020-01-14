@@ -1,5 +1,5 @@
 <template>
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded mt-1">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded">
 		<a class="navbar-brand">TaskTimer</a>
 		<button
 			class="navbar-toggler"

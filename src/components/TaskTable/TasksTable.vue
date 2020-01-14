@@ -128,7 +128,6 @@ export default {
 			await api.destroy('/auth/tasks', data);
 		},
 		async updateTableContent(data) {
-		    console.log('updated');
 			await api.store('/auth/tasks', data);
 		},
 		async getTableContent(page) {
